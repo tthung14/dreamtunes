@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "563448949727",
+    "project_id": "dreamtunes-267eb",
+    "storage_bucket": "dreamtunes-267eb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:563448949727:android:e58693025826b52e9bf26a",
+        "android_client_info": {
+          "package_name": "com.tuhoc.dreamtunes"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtCdadZ3RDheINR0j1fpURLmMjx-gf2hw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
