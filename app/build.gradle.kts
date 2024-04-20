@@ -17,7 +17,7 @@ android {
 
     defaultConfig {
         applicationId = "com.tuhoc.dreamtunes"
-        minSdk = 24
+        minSdk = 21
         //noinspection EditedTargetSdkVersion
         targetSdk = 34
         versionCode = 1
@@ -109,4 +109,6 @@ dependencies {
 
     implementation("androidx.media:media:1.7.0")
 
+    // keyboard event
+    implementation("net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.1.0")
 }

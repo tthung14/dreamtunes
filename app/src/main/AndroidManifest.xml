@@ -29,6 +29,7 @@
 
         <activity
             android:name=".ui.edit_profile.EditProfileActivity"
+            android:windowSoftInputMode="adjustPan"
             android:exported="false" />
         <activity
             android:name=".ui.signup.SignupActivity"
