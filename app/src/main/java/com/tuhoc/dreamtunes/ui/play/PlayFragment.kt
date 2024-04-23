@@ -191,10 +191,10 @@ class PlayFragment : BaseFragment<FragmentPlayBinding>(FragmentPlayBinding::infl
         binding.imgRandom.setOnClickListener {
             if (!isRandom) {
                 isRandom = true
-                binding.imgRandom.setBackgroundResource(R.drawable.ic_random_enable)
+                binding.imgRandom.setImageResource(R.drawable.ic_random_enable)
             } else {
                 isRandom = false
-                binding.imgRandom.setBackgroundResource(R.drawable.ic_random)
+                binding.imgRandom.setImageResource(R.drawable.ic_random)
             }
         }
     }
@@ -250,9 +250,9 @@ class PlayFragment : BaseFragment<FragmentPlayBinding>(FragmentPlayBinding::infl
         }
 
         if (isRandom) {
-            binding.imgRandom.setBackgroundResource(R.drawable.ic_random_enable)
+            binding.imgRandom.setImageResource(R.drawable.ic_random_enable)
         } else {
-            binding.imgRandom.setBackgroundResource(R.drawable.ic_random)
+            binding.imgRandom.setImageResource(R.drawable.ic_random)
         }
 
 //        val drawable: BitmapDrawable = binding.imgAvatar.drawable as BitmapDrawable

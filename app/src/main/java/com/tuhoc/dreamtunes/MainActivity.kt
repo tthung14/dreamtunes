@@ -1,5 +1,6 @@
 package com.tuhoc.dreamtunes
 
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.view.View
 import androidx.core.app.ActivityCompat
@@ -8,6 +9,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.tuhoc.dreamtunes.bases.BaseActivity
 import com.tuhoc.dreamtunes.databinding.ActivityMainBinding
+import com.tuhoc.dreamtunes.service.MusicService
 
 class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
 
@@ -81,6 +83,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
     override fun onDestroy() {
         super.onDestroy()
-
+        stopService(Intent(this, MusicService::class.java))
     }
 }

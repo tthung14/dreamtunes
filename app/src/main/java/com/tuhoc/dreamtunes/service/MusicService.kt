@@ -193,4 +193,9 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
         return START_STICKY
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        mediaPlayer?.release() // Dừng MediaPlayer
+        stopForeground(true) // Gỡ bỏ notification và dừng foreground service
+    }
 }
