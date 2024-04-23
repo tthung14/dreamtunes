@@ -19,13 +19,11 @@ class NotificationReceiver : BroadcastReceiver() {
                 increment = false,
                 context = context!!
             )
-
             ApplicationClass.PLAY -> if (PlayFragment.isPlaying) pauseMusic() else playMusic()
             ApplicationClass.NEXT -> if (PlayFragment.musicListPA.size > 1) prevNextSong(
                 increment = true,
                 context = context!!
             )
-
             ApplicationClass.EXIT -> {
 //                 exitApplication()
             }
@@ -37,7 +35,6 @@ class NotificationReceiver : BroadcastReceiver() {
         PlayFragment.musicService!!.mediaPlayer!!.start()
         PlayFragment.musicService!!.showNotification(R.drawable.ic_pause)
         PlayFragment.bindingD.imgPausePlay.setImageResource(R.drawable.ic_pause)
-
     }
 
     private fun pauseMusic() {

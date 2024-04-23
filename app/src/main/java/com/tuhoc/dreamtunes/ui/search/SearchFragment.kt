@@ -3,11 +3,9 @@ package com.tuhoc.dreamtunes.ui.search
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.tuhoc.dreamtunes.R
 import com.tuhoc.dreamtunes.adapter.SearchAdapter
 import com.tuhoc.dreamtunes.bases.BaseFragment
@@ -19,8 +17,6 @@ import com.tuhoc.dreamtunes.ui.home.HomeViewModel
 import com.tuhoc.dreamtunes.ui.list_song.ListSongViewModel
 import com.tuhoc.dreamtunes.ui.play.SharedViewModel
 import com.tuhoc.dreamtunes.utils.Constants
-import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
-import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener
 
 
 class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding::inflate) {
@@ -69,15 +65,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
             }
         })
 
-        KeyboardVisibilityEvent.setEventListener(
-            requireActivity(),
-            KeyboardVisibilityEventListener { isOpen ->
-                if (isOpen) {
-                    requireActivity().findViewById<BottomNavigationView>(R.id.bnvNav).visibility = View.INVISIBLE
-                } else {
-                    requireActivity().findViewById<BottomNavigationView>(R.id.bnvNav).visibility = View.VISIBLE
-                }
-            })
+        Constants.hideBottomUpKeyboard(requireActivity())
     }
 
     override fun handleEvent() {
@@ -112,6 +100,8 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
                     R.id.action_searchFragment_to_playFragment,
                     bundle
                 )
+
+                Constants.hideKeyboardOnStart(requireContext(), binding.edtSearch)
             }
 
             override fun onSingerClickListener(singer: Singer) {
@@ -122,9 +112,10 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
                     R.id.action_searchFragment_to_artistFragment,
                     bundle
                 )
+
+                Constants.hideKeyboardOnStart(requireContext(), binding.edtSearch)
             }
         })
-
     }
 
     private fun filter(text: String) {

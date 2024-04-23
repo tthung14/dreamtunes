@@ -1,19 +1,12 @@
 package com.tuhoc.dreamtunes
 
 import android.content.pm.PackageManager
-import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import android.view.View
-import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import com.tuhoc.dreamtunes.R
 import com.tuhoc.dreamtunes.bases.BaseActivity
-import com.tuhoc.dreamtunes.data.pojo.User
 import com.tuhoc.dreamtunes.databinding.ActivityMainBinding
 
 class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
@@ -86,4 +79,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         )
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+
+    }
 }

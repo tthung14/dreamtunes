@@ -17,7 +17,7 @@ android {
 
     defaultConfig {
         applicationId = "com.tuhoc.dreamtunes"
-        minSdk = 21
+        minSdk = 24
         //noinspection EditedTargetSdkVersion
         targetSdk = 34
         versionCode = 1

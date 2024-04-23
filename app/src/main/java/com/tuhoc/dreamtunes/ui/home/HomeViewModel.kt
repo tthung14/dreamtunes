@@ -27,7 +27,7 @@ class HomeViewModel: ViewModel() {
     init {
         val listImage = listOf(
             "https://bizweb.dktcdn.net/100/160/353/themes/903213/assets/slider_1.jpg?1688461513259",
-            "https://trankhuongmusic.com/public/thumbs/1440x600x1/100_closeup-man-playing-bass-guitar-zyGZeivH9F.webp",
+            "https://amthanhthudo.com/wp-content/uploads/am-nhac-Nang-cao-suc-khoe-doi-song-tinh-than.jpg",
             "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/cover/3/9/8/e/398e9ea699a3d1d0ea28dde20f7d1d99.jpg",
             "https://photo-resize-zmp3.zmdcdn.me/w600_r1x1_jpeg/cover/2/9/0/6/2906681d4b764cd4677342b66813f25d.jpg",
             "https://photo-resize-zmp3.zmdcdn.me/w256_r1x1_jpeg/cover/4/c/e/a/4cea246ebb6a3201636ccae9c75c4521.jpg",

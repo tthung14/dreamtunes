@@ -4,15 +4,21 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.media.MediaMetadataRetriever
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentActivity
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.color.MaterialColors
 import com.tuhoc.dreamtunes.R
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener
 import java.util.concurrent.TimeUnit
 
 object Constants { // lưu trữ những gì liên quan đến key: baseurl, link...
     const val API_KEY = ""
-    const val BASE_URL = "http://192.168.1.19:8080/api/"
+    const val BASE_URL = "http://192.168.1.204:8080/api/"
     const val ALL_SONG_URL = "songs"
     const val ALL_TYPE_URL = "songs/type"
     const val ALL_USER_URL = "users"
@@ -51,7 +57,28 @@ object Constants { // lưu trữ những gì liên quan đến key: baseurl, lin
     fun formatDuration(duration: Long):String {
         val minutes = TimeUnit.MINUTES.convert(duration, TimeUnit.MILLISECONDS)
         val seconds = (TimeUnit.SECONDS.convert(duration, TimeUnit.MILLISECONDS) -
-                minutes* TimeUnit.SECONDS.convert(1, TimeUnit.MINUTES))
+                minutes * TimeUnit.SECONDS.convert(1, TimeUnit.MINUTES))
         return String.format("%2d:%02d", minutes, seconds)
     }
+
+    // ẩn thanh bottom navigation khi hiện keyboard
+    fun hideBottomUpKeyboard(activity: FragmentActivity) {
+        KeyboardVisibilityEvent.setEventListener(
+            activity,
+            KeyboardVisibilityEventListener { isOpen ->
+                if (isOpen) {
+                    activity.findViewById<BottomNavigationView>(R.id.bnvNav).visibility = View.GONE
+                } else {
+                    activity.findViewById<BottomNavigationView>(R.id.bnvNav).visibility = View.VISIBLE
+                }
+            }
+        )
+    }
+
+    // ẩn bàn phím khi sang màn khác
+    fun hideKeyboardOnStart(context: Context, editText: View) {
+        val mgr = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        mgr.hideSoftInputFromWindow(editText.windowToken, 0)
+    }
+
 }

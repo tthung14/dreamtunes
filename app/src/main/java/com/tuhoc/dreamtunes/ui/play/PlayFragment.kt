@@ -42,23 +42,54 @@ class PlayFragment : BaseFragment<FragmentPlayBinding>(FragmentPlayBinding::infl
         var isPlaying: Boolean = false
         var musicService: MusicService? = null
         var sharedViewModel: SharedViewModel? = null
+        var isRandom: Boolean = false
 
         @SuppressLint("StaticFieldLeak")
         lateinit var bindingD: FragmentPlayBinding
         var nowPlayingId: Int = 0
 
         fun setSongPosition(increment: Boolean): Int {
-            if (increment) {
-                if (musicListPA.size - 1 == songPosition)
-                    songPosition = 0
-                else ++songPosition
+//            if (isRandom) {
+//                // Nếu chế độ ngẫu nhiên được bật, chọn một vị trí ngẫu nhiên trong danh sách bài hát
+//                songPosition = (0 until musicListPA.size).random()
+//            } else {
+//                if (increment) {
+//                    if (musicListPA.size - 1 == songPosition)
+//                        songPosition = 0
+//                    else ++songPosition
+//                } else {
+//                    if (0 == songPosition)
+//                        songPosition = musicListPA.size - 1
+//                    else --songPosition
+//                }
+//            }
+//
+//            return musicListPA[songPosition].songId!!
+            val previousSongPosition = songPosition // Lưu lại vị trí bài hát trước khi cập nhật
+
+            if (isRandom) {
+                // Nếu chế độ ngẫu nhiên được bật, chọn một vị trí ngẫu nhiên trong danh sách bài hát
+                songPosition = (0 until musicListPA.size).random()
             } else {
-                if (0 == songPosition)
-                    songPosition = musicListPA.size - 1
-                else --songPosition
+                // Nếu chế độ ngẫu nhiên không được bật, xác định vị trí tiếp theo dựa trên increment
+                if (increment) {
+                    if (musicListPA.size - 1 == songPosition)
+                        songPosition = 0
+                    else ++songPosition
+                } else {
+                    if (0 == songPosition)
+                        songPosition = musicListPA.size - 1
+                    else --songPosition
+                }
             }
 
-            return musicListPA[songPosition].songId!!
+            // Nếu vị trí bài hát đã thay đổi, thì mới cần cập nhật giao diện
+            return if (songPosition != previousSongPosition) {
+                musicListPA[songPosition].songId!!
+            } else {
+                // Nếu vị trí không thay đổi, không cần cập nhật giao diện
+                -1
+            }
         }
     }
 
@@ -124,7 +155,7 @@ class PlayFragment : BaseFragment<FragmentPlayBinding>(FragmentPlayBinding::infl
         user!!.userId?.let {
             song.songId?.let { it1 ->
                 playViewModel.isFavoriteExits(it, it1) {
-                    if(it) {
+                    if (it) {
                         binding.imgFavorite.setBackgroundResource(R.drawable.ic_love_enable)
                     } else {
                         binding.imgFavorite.setBackgroundResource(R.drawable.ic_love)
@@ -153,8 +184,17 @@ class PlayFragment : BaseFragment<FragmentPlayBinding>(FragmentPlayBinding::infl
                             binding.imgFavorite.setBackgroundResource(R.drawable.ic_love_enable)
                         }
                     }
-
                 }
+            }
+        }
+
+        binding.imgRandom.setOnClickListener {
+            if (!isRandom) {
+                isRandom = true
+                binding.imgRandom.setBackgroundResource(R.drawable.ic_random_enable)
+            } else {
+                isRandom = false
+                binding.imgRandom.setBackgroundResource(R.drawable.ic_random)
             }
         }
     }
@@ -169,15 +209,15 @@ class PlayFragment : BaseFragment<FragmentPlayBinding>(FragmentPlayBinding::infl
         sharedViewModel!!.setMessage(song.songId!!)
         songPosition = po
 
-        Log.d("__haha", "initializeLayout: " + isActive)
         if (isNow) {
             setLayout()
-            binding.tvCurrentTime.text = Constants.formatDuration(musicService!!.mediaPlayer!!.currentPosition.toLong())
-            binding.tvTotalTime.text = Constants.formatDuration(musicService!!.mediaPlayer!!.duration.toLong())
+            binding.tvCurrentTime.text =
+                Constants.formatDuration(musicService!!.mediaPlayer!!.currentPosition.toLong())
+            binding.tvTotalTime.text =
+                Constants.formatDuration(musicService!!.mediaPlayer!!.duration.toLong())
             binding.seekBar.progress = musicService!!.mediaPlayer!!.currentPosition
             binding.seekBar.max = musicService!!.mediaPlayer!!.duration
-            if (isPlaying)
-            {
+            if (isPlaying) {
                 binding.imgPausePlay.setImageResource(R.drawable.ic_pause)
             } else {
                 binding.imgPausePlay.setImageResource(R.drawable.ic_play)
@@ -200,7 +240,7 @@ class PlayFragment : BaseFragment<FragmentPlayBinding>(FragmentPlayBinding::infl
         user!!.userId?.let {
             musicListPA[songPosition].songId?.let { it1 ->
                 playViewModel.isFavoriteExits(it, it1) {
-                    if(it) {
+                    if (it) {
                         binding.imgFavorite.setBackgroundResource(R.drawable.ic_love_enable)
                     } else {
                         binding.imgFavorite.setBackgroundResource(R.drawable.ic_love)
@@ -209,12 +249,18 @@ class PlayFragment : BaseFragment<FragmentPlayBinding>(FragmentPlayBinding::infl
             }
         }
 
-        val drawable: BitmapDrawable = binding.imgAvatar.drawable as BitmapDrawable
-        val bitmap: Bitmap = drawable.bitmap
-        val bgColor = getColorsFromBitmap(bitmap)
-        val gradient = GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, intArrayOf(0xFFFFFF, bgColor))
-        binding.root.background = gradient
-        requireActivity().window?.statusBarColor = bgColor
+        if (isRandom) {
+            binding.imgRandom.setBackgroundResource(R.drawable.ic_random_enable)
+        } else {
+            binding.imgRandom.setBackgroundResource(R.drawable.ic_random)
+        }
+
+//        val drawable: BitmapDrawable = binding.imgAvatar.drawable as BitmapDrawable
+//        val bitmap: Bitmap = drawable.bitmap
+//        val bgColor = getColorsFromBitmap(bitmap)
+//        val gradient = GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, intArrayOf(0xFFFFFF, bgColor))
+//        binding.root.background = gradient
+//        requireActivity().window?.statusBarColor = bgColor
     }
 
     private fun getColorsFromBitmap(bitmap: Bitmap): Int {
@@ -259,24 +305,31 @@ class PlayFragment : BaseFragment<FragmentPlayBinding>(FragmentPlayBinding::infl
     }
 
     private fun prevNextSong(increment: Boolean) {
-        if (increment) {
-            val songId = setSongPosition(increment = true)
-            setLayout()
-            createMediaPlayer()
-            sharedViewModel!!.setMessage(songId)
-        } else {
-            val songId = setSongPosition(increment = false)
+        val songId = setSongPosition(increment)
+        if (songId != -1) { // Kiểm tra nếu vị trí bài hát đã thay đổi
             setLayout()
             createMediaPlayer()
             sharedViewModel!!.setMessage(songId)
         }
+//        if (increment) {
+//            val songId = setSongPosition(increment = true)
+//            setLayout()
+//            createMediaPlayer()
+//            sharedViewModel!!.setMessage(songId)
+//        } else {
+//            val songId = setSongPosition(increment = false)
+//            setLayout()
+//            createMediaPlayer()
+//            sharedViewModel!!.setMessage(songId)
+//        }
     }
 
     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
         if (musicService == null) {
             val binder = service as MusicService.MyBinder
             musicService = binder.currentService()
-            musicService!!.audioManager = requireActivity().getSystemService(AppCompatActivity.AUDIO_SERVICE) as AudioManager
+            musicService!!.audioManager =
+                requireActivity().getSystemService(AppCompatActivity.AUDIO_SERVICE) as AudioManager
             musicService!!.audioManager.requestAudioFocus(
                 musicService,
                 AudioManager.STREAM_MUSIC,
@@ -298,7 +351,6 @@ class PlayFragment : BaseFragment<FragmentPlayBinding>(FragmentPlayBinding::infl
         if (isActive) {
             setLayout()
         }
-        Log.d("__haha", "onCompletion: haha " + isActive)
     }
 
     @Deprecated("Deprecated in Java")
@@ -309,7 +361,11 @@ class PlayFragment : BaseFragment<FragmentPlayBinding>(FragmentPlayBinding::infl
     }
 
 
-    private fun initServiceAndPlaylist(playlist: MutableList<Song>, shuffle: Boolean, playNext: Boolean = false) {
+    private fun initServiceAndPlaylist(
+        playlist: MutableList<Song>,
+        shuffle: Boolean,
+        playNext: Boolean = false
+    ) {
         val intent = Intent(requireActivity(), MusicService::class.java)
         requireActivity().bindService(intent, this, AppCompatActivity.BIND_AUTO_CREATE)
         requireActivity().startService(intent)

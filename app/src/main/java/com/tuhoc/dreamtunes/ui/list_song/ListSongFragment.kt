@@ -5,10 +5,12 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuInflater
+import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.tuhoc.dreamtunes.R
 import com.tuhoc.dreamtunes.adapter.PlaylistSongAddAdapter
 import com.tuhoc.dreamtunes.bases.BaseFragment
@@ -18,6 +20,8 @@ import com.tuhoc.dreamtunes.databinding.FragmentListSongBinding
 import com.tuhoc.dreamtunes.ui.home.HomeFragment
 import com.tuhoc.dreamtunes.ui.play.SharedViewModel
 import com.tuhoc.dreamtunes.utils.Constants
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener
 
 class ListSongFragment : BaseFragment<FragmentListSongBinding>(FragmentListSongBinding::inflate) {
     private lateinit var listSongViewModel: ListSongViewModel
@@ -61,6 +65,8 @@ class ListSongFragment : BaseFragment<FragmentListSongBinding>(FragmentListSongB
                 filter(searchText)
             }
         })
+
+        Constants.hideBottomUpKeyboard(requireActivity())
     }
 
     override fun handleEvent() {
@@ -98,6 +104,8 @@ class ListSongFragment : BaseFragment<FragmentListSongBinding>(FragmentListSongB
                     R.id.action_listSongFragment_to_playFragment,
                     bundle
                 )
+
+                Constants.hideKeyboardOnStart(requireContext(), binding.edtSearch)
             }
 
             override fun onClickEvent(song: Song) {
