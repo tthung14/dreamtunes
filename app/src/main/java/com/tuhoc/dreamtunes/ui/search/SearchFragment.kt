@@ -94,7 +94,10 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
                     putParcelable(Constants.SONG, song)
                     putBoolean("play", isNow)
                     putInt("po", p)
-                    putParcelableArrayList(Constants.LIST, ArrayList(searchAdapter.getSongList().filterIsInstance<Song>()))
+                    putParcelableArrayList(
+                        Constants.LIST,
+                        ArrayList(searchAdapter.getSongList().filterIsInstance<Song>())
+                    )
                 }
                 Navigation.findNavController(requireView()).navigate(
                     R.id.action_searchFragment_to_playFragment,

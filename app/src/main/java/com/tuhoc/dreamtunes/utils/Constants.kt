@@ -1,17 +1,13 @@
 package com.tuhoc.dreamtunes.utils
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Color
-import android.media.MediaMetadataRetriever
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
+import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.color.MaterialColors
 import com.tuhoc.dreamtunes.R
+import com.tuhoc.dreamtunes.ui.search.SearchFragment
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener
 import java.util.concurrent.TimeUnit
@@ -52,7 +48,6 @@ object Constants { // lưu trữ những gì liên quan đến key: baseurl, lin
     const val IS_LOGGED_IN = "IS_LOGGED_IN"
     const val LOGGED_USER = "LOGGED_USER"
     const val CHANNEL_ID = "CHANNEL_ID"
-    const val DATABASE_URL = "https://shopsmart-66e02-default-rtdb.asia-southeast1.firebasedatabase.app/"
 
     fun formatDuration(duration: Long):String {
         val minutes = TimeUnit.MINUTES.convert(duration, TimeUnit.MILLISECONDS)
@@ -69,7 +64,14 @@ object Constants { // lưu trữ những gì liên quan đến key: baseurl, lin
                 if (isOpen) {
                     activity.findViewById<BottomNavigationView>(R.id.bnvNav).visibility = View.GONE
                 } else {
-                    activity.findViewById<BottomNavigationView>(R.id.bnvNav).visibility = View.VISIBLE
+                    val navHostFragment =
+                        activity.supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+                    val currentFragment = navHostFragment.childFragmentManager.fragments.firstOrNull()
+                    if (currentFragment is SearchFragment) {
+                        activity.findViewById<BottomNavigationView>(R.id.bnvNav).visibility = View.VISIBLE
+                    } else {
+                        activity.findViewById<BottomNavigationView>(R.id.bnvNav).visibility = View.GONE
+                    }
                 }
             }
         )
