@@ -17,13 +17,16 @@ import com.tuhoc.dreamtunes.bases.BaseFragment
 import com.tuhoc.dreamtunes.data.pojo.Playlist
 import com.tuhoc.dreamtunes.data.pojo.Song
 import com.tuhoc.dreamtunes.databinding.FragmentListSongBinding
+import com.tuhoc.dreamtunes.manager.LoginManager
 import com.tuhoc.dreamtunes.ui.home.HomeFragment
+import com.tuhoc.dreamtunes.ui.home.HomeViewModel
 import com.tuhoc.dreamtunes.ui.play.SharedViewModel
 import com.tuhoc.dreamtunes.utils.Constants
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener
 
 class ListSongFragment : BaseFragment<FragmentListSongBinding>(FragmentListSongBinding::inflate) {
+    private lateinit var homeViewModel: HomeViewModel
     private lateinit var listSongViewModel: ListSongViewModel
     private lateinit var playlistSongAddAdapter: PlaylistSongAddAdapter
     private lateinit var sharedViewModel: SharedViewModel
@@ -31,9 +34,9 @@ class ListSongFragment : BaseFragment<FragmentListSongBinding>(FragmentListSongB
     override fun observerData() {
         super.observerData()
         listSongViewModel = ViewModelProvider(this)[ListSongViewModel::class.java]
+        homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
 
         sharedViewModel = ViewModelProvider(requireActivity())[SharedViewModel::class.java]
-
         sharedViewModel.messageLiveData.observe(viewLifecycleOwner, Observer { songId ->
             HomeFragment.currentSongId = songId
             playlistSongAddAdapter.updateSong()
@@ -90,6 +93,7 @@ class ListSongFragment : BaseFragment<FragmentListSongBinding>(FragmentListSongB
 
     private fun onSongClick() {
         val playlist = arguments?.getParcelable<Playlist>(Constants.PLAYLIST)
+        val user = LoginManager.getCurrentUser(requireContext())
 
         playlistSongAddAdapter.onItemClicked(object : PlaylistSongAddAdapter.OnItemClick {
             override fun onClickListener(song: Song, p: Int, isNow: Boolean) {
@@ -106,6 +110,12 @@ class ListSongFragment : BaseFragment<FragmentListSongBinding>(FragmentListSongB
                 )
 
                 Constants.hideKeyboardOnStart(requireContext(), binding.edtSearch)
+
+                user!!.userId?.let { song.songId?.let { it1 ->
+                    homeViewModel.latestListenTime(it,
+                        it1
+                    )
+                } }
             }
 
             override fun onClickEvent(song: Song) {

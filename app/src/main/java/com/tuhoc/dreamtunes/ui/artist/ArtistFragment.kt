@@ -17,13 +17,15 @@ import com.tuhoc.dreamtunes.data.pojo.Singer
 import com.tuhoc.dreamtunes.data.pojo.Song
 import com.tuhoc.dreamtunes.data.pojo.Type
 import com.tuhoc.dreamtunes.databinding.FragmentArtistBinding
+import com.tuhoc.dreamtunes.manager.LoginManager
 import com.tuhoc.dreamtunes.ui.home.HomeFragment
+import com.tuhoc.dreamtunes.ui.home.HomeViewModel
 import com.tuhoc.dreamtunes.ui.play.SharedViewModel
 import com.tuhoc.dreamtunes.utils.Constants
 import com.tuhoc.dreamtunes.utils.Constants.SINGER
 
 class ArtistFragment : BaseFragment<FragmentArtistBinding>(FragmentArtistBinding::inflate) {
-
+    private lateinit var homeViewModel: HomeViewModel
     private lateinit var singerViewModel: SingerViewModel
     private lateinit var songAdapter: SongAdapter
     private lateinit var albumAdapter: AlbumAdapter
@@ -41,6 +43,7 @@ class ArtistFragment : BaseFragment<FragmentArtistBinding>(FragmentArtistBinding
 
     override fun observerData() {
         super.observerData()
+        homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
         singerViewModel = ViewModelProvider(this)[SingerViewModel::class.java]
         observeSinger()
 
@@ -91,6 +94,8 @@ class ArtistFragment : BaseFragment<FragmentArtistBinding>(FragmentArtistBinding
     }
 
     private fun onSongClick() {
+        val user = LoginManager.getCurrentUser(requireContext())
+
         songAdapter.onItemClicked(object : SongAdapter.OnItemClick {
             override fun onClickListener(song: Song,p:Int, isNow: Boolean) {
                 // Chuyển đến màn hình play music khi được click
@@ -105,7 +110,14 @@ class ArtistFragment : BaseFragment<FragmentArtistBinding>(FragmentArtistBinding
                     R.id.action_artistFragment_to_playFragment,
                     bundle
                 )
+
+                user!!.userId?.let { song.songId?.let { it1 ->
+                    homeViewModel.latestListenTime(it,
+                        it1
+                    )
+                } }
             }
+
         })
     }
 

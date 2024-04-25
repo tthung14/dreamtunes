@@ -90,12 +90,6 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.7.4"))
     implementation("com.google.firebase:firebase-analytics")
 
-//    // realtime
-//    implementation("com.google.firebase:firebase-database")
-
-//    // authentication
-//    implementation("com.google.firebase:firebase-auth")
-
     // image picker
     implementation("com.github.dhaval2404:imagepicker:2.1")
 
@@ -104,9 +98,7 @@ dependencies {
 
     // media
     implementation("androidx.media:media:1.7.0")
-
     implementation("androidx.palette:palette:1.0.0")
-
     implementation("androidx.media:media:1.7.0")
 
     // keyboard event

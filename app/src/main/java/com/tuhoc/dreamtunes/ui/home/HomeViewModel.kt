@@ -5,10 +5,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tuhoc.dreamtunes.data.pojo.HistoryListenFavorite
 import com.tuhoc.dreamtunes.data.pojo.Singer
 import com.tuhoc.dreamtunes.data.pojo.Song
 import com.tuhoc.dreamtunes.data.pojo.Type
 import com.tuhoc.dreamtunes.data.retrofit.RetrofitInstance
+import com.tuhoc.dreamtunes.utils.Constants
 import kotlinx.coroutines.launch
 
 class HomeViewModel: ViewModel() {
@@ -95,6 +97,49 @@ class HomeViewModel: ViewModel() {
                 }
             } catch (e: Exception) {
                 // Xử lý exception
+                Log.e("TAG", "Error Exception: ${e.message}")
+            }
+        }
+    }
+
+    private fun checkExists(userId: Int, songId: Int, onResult: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            try {
+                val response = songApi.checkExists(userId, songId)
+                if (response.isSuccessful) {
+                    response.body()?.let { onResult(it) }
+                }
+            } catch (e: Exception) {
+                Log.e("TAG", "Error Exception: ${e.message}")
+            }
+        }
+    }
+
+    fun latestListenTime(userId: Int, songId: Int) {
+        checkExists(userId, songId) {
+            if (it) {
+                updateLatestListenTime(userId, songId, Constants.date())
+            } else {
+                addLatestListenTime(userId, songId, Constants.date())
+            }
+        }
+    }
+    private fun updateLatestListenTime(userId: Int, songId: Int, latestListenTime: String) {
+        val historyListenFavorite = HistoryListenFavorite(null, null, latestListenTime, null)
+        viewModelScope.launch {
+            try {
+                songApi.updateHistoryListen(userId, songId, historyListenFavorite)
+            } catch (e: Exception) {
+                Log.e("TAG", "Error Exception: ${e.message}")
+            }
+        }
+    }
+    private fun addLatestListenTime(userId: Int, songId: Int, latestListenTime: String) {
+        val historyListenFavorite = HistoryListenFavorite(songId, userId, latestListenTime, false)
+        viewModelScope.launch {
+            try {
+                songApi.addHistoryListen(historyListenFavorite)
+            } catch (e: Exception) {
                 Log.e("TAG", "Error Exception: ${e.message}")
             }
         }

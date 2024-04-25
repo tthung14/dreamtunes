@@ -1,6 +1,6 @@
 
 import com.tuhoc.dreamtunes.data.pojo.Album
-import com.tuhoc.dreamtunes.data.pojo.Favorite
+import com.tuhoc.dreamtunes.data.pojo.HistoryListenFavorite
 import com.tuhoc.dreamtunes.data.pojo.Playlist
 import com.tuhoc.dreamtunes.data.pojo.PlaylistSong
 import com.tuhoc.dreamtunes.data.pojo.Singer
@@ -57,14 +57,11 @@ interface SongApi {
     @GET("${Constants.ALL_FAVORITE_URL}{userId}")
     suspend fun getFavoriteSongs(@Path("userId") userId: Int): Response<List<Song>>
 
-    @POST(Constants.INSERT_FAVORITE_URL)
-    suspend fun addFavoriteSong(@Body favorite: Favorite): Response<Favorite>
-
-    @DELETE("${Constants.DELETE_FAVORITE_URL}{userId}/{songId}")
-    suspend fun deleteFavoriteSong(@Path("userId") userId: Int, @Path("songId") songId: Int): Response<String>
+    @PUT("${Constants.UPDATE_FAVORITE_URL}{userId}/{songId}")
+    suspend fun updateFavoriteSong(@Path("userId") userId: Int, @Path("songId") songId: Int, @Body favorite: HistoryListenFavorite): Response<HistoryListenFavorite>
 
     @GET("${Constants.CHECK_FAVORITE}{userId}/{songId}")
-    suspend fun checkFavoriteExistence(@Path("userId") userId: Int, @Path("songId") songId: Int): Response<Boolean>
+    suspend fun checkFavoriteExists(@Path("userId") userId: Int, @Path("songId") songId: Int): Response<Boolean>
 
     @POST(Constants.INSERT_PLAYLIST_URL)
     suspend fun addPlaylist(@Body playlist: Playlist): Response<Playlist>
@@ -86,4 +83,13 @@ interface SongApi {
 
     @POST(Constants.INSERT_SONG_BY_PLAYLIST_URL)
     suspend fun addSongByPlaylist(@Body playlistSong: PlaylistSong): Response<PlaylistSong>
+
+    @GET("${Constants.CHECK_HISTORY_LISTEN}{userId}/{songId}")
+    suspend fun checkExists(@Path("userId") userId: Int, @Path("songId") songId: Int): Response<Boolean>
+    @POST(Constants.INSERT_HISTORY_LISTEN_URL)
+    suspend fun addHistoryListen(@Body historyListenFavorite: HistoryListenFavorite): Response<HistoryListenFavorite>
+    @PUT("${Constants.UPDATE_HISTORY_LISTEN_URL}{userId}/{songId}")
+    suspend fun updateHistoryListen(@Path("userId") userId: Int, @Path("songId") songId: Int, @Body historyListenFavorite: HistoryListenFavorite): Response<HistoryListenFavorite>
+    @GET("${Constants.ALL_HISTORY_LISTEN_URL}{userId}")
+    suspend fun getHistoryListen(@Path("userId") userId: Int): Response<List<Song>>
 }

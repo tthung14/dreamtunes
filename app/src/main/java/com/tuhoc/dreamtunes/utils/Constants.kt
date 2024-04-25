@@ -10,25 +10,30 @@ import com.tuhoc.dreamtunes.R
 import com.tuhoc.dreamtunes.ui.search.SearchFragment
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 object Constants { // lưu trữ những gì liên quan đến key: baseurl, link...
     const val API_KEY = ""
-    const val BASE_URL = "http://192.168.1.204:8080/api/"
+    const val BASE_URL = "http://192.168.16.109:8080/api/"
     const val ALL_SONG_URL = "songs"
     const val ALL_TYPE_URL = "songs/type"
     const val ALL_USER_URL = "users"
     const val ALL_SINGER_URL = "singers"
-    const val ALL_FAVORITE_URL = "favorites/"
+    const val ALL_FAVORITE_URL = "favorite/"
+    const val ALL_HISTORY_LISTEN_URL = "historylisten/"
     const val INSERT_USER_URL = "users/post"
-    const val INSERT_FAVORITE_URL = "favorites/post"
     const val INSERT_PLAYLIST_URL = "users/playlist/post"
     const val INSERT_SONG_BY_PLAYLIST_URL = "users/playlistsong/post"
-    const val DELETE_FAVORITE_URL = "favorites/delete/"
+    const val INSERT_HISTORY_LISTEN_URL = "historylisten/post"
     const val DELETE_PLAYLIST_URL = "users/playlist/delete/"
+    const val UPDATE_FAVORITE_URL = "favorite/put/"
     const val DELETE_SONG_BY_PLAYLIST_URL = "users/playlistsong/delete/"
     const val UPDATE_USER_URL = "users/put/"
     const val UPDATE_PLAYLIST_URL = "users/playlist/put/"
+    const val UPDATE_HISTORY_LISTEN_URL = "historylisten/put/"
     const val PLAYLIST_BY_USER_URL = "users/playlist/"
     const val SONG_BY_SINGER_URL = "songs/singer/"
     const val SONG_BY_TYPE_URL = "songs/type/"
@@ -43,7 +48,8 @@ object Constants { // lưu trữ những gì liên quan đến key: baseurl, lin
     const val PLAYLIST = "PLAYLIST"
     const val LIST = "LIST"
     const val CHECK_EMAIL = "users/checkemail"
-    const val CHECK_FAVORITE = "favorites/checkfavorite/"
+    const val CHECK_FAVORITE = "checkfavorite/"
+    const val CHECK_HISTORY_LISTEN = "checkhistorylisten/"
     const val LOGIN_STATUS = "LOGIN_STATUS"
     const val IS_LOGGED_IN = "IS_LOGGED_IN"
     const val LOGGED_USER = "LOGGED_USER"
@@ -83,4 +89,10 @@ object Constants { // lưu trữ những gì liên quan đến key: baseurl, lin
         mgr.hideSoftInputFromWindow(editText.windowToken, 0)
     }
 
+    // lấy ngày hiện tại
+    fun date(): String {
+        val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.ENGLISH)
+        val currentDate = Date()
+        return dateFormat.format(currentDate)
+    }
 }

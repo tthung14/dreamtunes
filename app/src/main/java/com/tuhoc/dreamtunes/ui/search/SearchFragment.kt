@@ -12,6 +12,7 @@ import com.tuhoc.dreamtunes.bases.BaseFragment
 import com.tuhoc.dreamtunes.data.pojo.Singer
 import com.tuhoc.dreamtunes.data.pojo.Song
 import com.tuhoc.dreamtunes.databinding.FragmentSearchBinding
+import com.tuhoc.dreamtunes.manager.LoginManager
 import com.tuhoc.dreamtunes.ui.home.HomeFragment
 import com.tuhoc.dreamtunes.ui.home.HomeViewModel
 import com.tuhoc.dreamtunes.ui.list_song.ListSongViewModel
@@ -88,6 +89,8 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
     }
 
     private fun onSongClick() {
+        val user = LoginManager.getCurrentUser(requireContext())
+
         searchAdapter.onItemClicked(object : SearchAdapter.OnItemClick {
             override fun onSongClickListener(song: Song, p: Int, isNow: Boolean) {
                 val bundle = Bundle().apply {
@@ -105,6 +108,12 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
                 )
 
                 Constants.hideKeyboardOnStart(requireContext(), binding.edtSearch)
+
+                user!!.userId?.let { song.songId?.let { it1 ->
+                    homeViewModel.latestListenTime(it,
+                        it1
+                    )
+                } }
             }
 
             override fun onSingerClickListener(singer: Singer) {

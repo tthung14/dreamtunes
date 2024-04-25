@@ -15,12 +15,12 @@ import com.tuhoc.dreamtunes.data.pojo.Singer
 import com.tuhoc.dreamtunes.data.pojo.Song
 import com.tuhoc.dreamtunes.data.pojo.Type
 import com.tuhoc.dreamtunes.databinding.FragmentHomeBinding
+import com.tuhoc.dreamtunes.manager.LoginManager
 import com.tuhoc.dreamtunes.ui.play.SharedViewModel
 import com.tuhoc.dreamtunes.utils.Constants.LIST
 import com.tuhoc.dreamtunes.utils.Constants.SINGER
 import com.tuhoc.dreamtunes.utils.Constants.SONG
 import com.tuhoc.dreamtunes.utils.Constants.TYPE
-import kotlin.jvm.java as java
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate) {
     private lateinit var homeViewModel: HomeViewModel
@@ -116,6 +116,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     }
 
     private fun onSongClick() {
+        val user = LoginManager.getCurrentUser(requireContext())
+
         songAdapter.onItemClicked(object : SongAdapter.OnItemClick {
             override fun onClickListener(song: Song, p:Int,isNow: Boolean) {
                 val bundle = Bundle().apply {
@@ -129,7 +131,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                     R.id.action_homeFragment_to_playFragment,
                     bundle
                 )
-
+                user!!.userId?.let { song.songId?.let { it1 ->
+                    homeViewModel.latestListenTime(it,
+                        it1
+                    )
+                } }
             }
         })
     }

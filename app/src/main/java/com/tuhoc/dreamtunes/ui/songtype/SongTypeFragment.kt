@@ -21,6 +21,7 @@ import com.tuhoc.dreamtunes.data.pojo.Song
 import com.tuhoc.dreamtunes.data.pojo.Type
 import com.tuhoc.dreamtunes.databinding.FragmentHomeBinding
 import com.tuhoc.dreamtunes.databinding.FragmentSongTypeBinding
+import com.tuhoc.dreamtunes.manager.LoginManager
 import com.tuhoc.dreamtunes.ui.home.HomeFragment
 import com.tuhoc.dreamtunes.ui.home.HomeViewModel
 import com.tuhoc.dreamtunes.ui.play.SharedViewModel
@@ -30,17 +31,18 @@ import com.tuhoc.dreamtunes.utils.Constants.SONG
 import com.tuhoc.dreamtunes.utils.Constants.TYPE
 
 class SongTypeFragment : BaseFragment<FragmentSongTypeBinding>(FragmentSongTypeBinding::inflate) {
+    private lateinit var homeViewModel: HomeViewModel
     private lateinit var songTypeViewModel: SongTypeViewModel
     private lateinit var songAdapter: SongAdapter
     private lateinit var sharedViewModel: SharedViewModel
 
     override fun observerData() {
         super.observerData()
+        homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
         songTypeViewModel = ViewModelProvider(this)[SongTypeViewModel::class.java]
         observeSongs()
 
         sharedViewModel = ViewModelProvider(requireActivity())[SharedViewModel::class.java]
-
         sharedViewModel.messageLiveData.observe(viewLifecycleOwner, Observer { songId ->
             HomeFragment.currentSongId = songId
             songAdapter.updateSong()
@@ -90,9 +92,10 @@ class SongTypeFragment : BaseFragment<FragmentSongTypeBinding>(FragmentSongTypeB
     }
 
     private fun onSongClick() {
+        val user = LoginManager.getCurrentUser(requireContext())
+
         songAdapter.onItemClicked(object : SongAdapter.OnItemClick {
             override fun onClickListener(song: Song,p:Int, isNow: Boolean) {
-                // Chuyển đến màn hình play music khi được click
                 val bundle = Bundle().apply {
                     putParcelable(SONG, song)
                     putBoolean("play", isNow)
@@ -104,6 +107,12 @@ class SongTypeFragment : BaseFragment<FragmentSongTypeBinding>(FragmentSongTypeB
                     R.id.action_songTypeFragment_to_playFragment,
                     bundle
                 )
+
+                user!!.userId?.let { song.songId?.let { it1 ->
+                    homeViewModel.latestListenTime(it,
+                        it1
+                    )
+                } }
             }
         })
     }

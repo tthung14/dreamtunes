@@ -23,6 +23,7 @@ import com.tuhoc.dreamtunes.databinding.FragmentPlaylistBinding
 import com.tuhoc.dreamtunes.databinding.FragmentSongTypeBinding
 import com.tuhoc.dreamtunes.manager.LoginManager
 import com.tuhoc.dreamtunes.ui.home.HomeFragment
+import com.tuhoc.dreamtunes.ui.home.HomeViewModel
 import com.tuhoc.dreamtunes.ui.play.SharedViewModel
 import com.tuhoc.dreamtunes.ui.songtype.SongTypeViewModel
 import com.tuhoc.dreamtunes.utils.Constants
@@ -33,6 +34,7 @@ import kotlinx.coroutines.launch
 import kotlin.math.log
 
 class PlaylistFragment : BaseFragment<FragmentPlaylistBinding>(FragmentPlaylistBinding::inflate) {
+    private lateinit var homeViewModel: HomeViewModel
     private lateinit var playlistViewModel: PlaylistViewModel
     private lateinit var playlistSongDeleteAdapter: PlaylistSongDeleteAdapter
     private lateinit var sharedViewModel: SharedViewModel
@@ -40,10 +42,10 @@ class PlaylistFragment : BaseFragment<FragmentPlaylistBinding>(FragmentPlaylistB
     override fun observerData() {
         super.observerData()
         playlistViewModel = ViewModelProvider(this)[PlaylistViewModel::class.java]
+        homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
         observeSongs()
 
         sharedViewModel = ViewModelProvider(requireActivity())[SharedViewModel::class.java]
-
         sharedViewModel.messageLiveData.observe(viewLifecycleOwner, Observer { songId ->
             HomeFragment.currentSongId = songId
             playlistSongDeleteAdapter.updateSong()
@@ -85,6 +87,7 @@ class PlaylistFragment : BaseFragment<FragmentPlaylistBinding>(FragmentPlaylistB
 
     private fun onSongClick() {
         val playlist = arguments?.getParcelable<Playlist>(Constants.PLAYLIST)
+        val user = LoginManager.getCurrentUser(requireContext())
 
         playlistSongDeleteAdapter.onItemClicked(object : PlaylistSongDeleteAdapter.OnItemClick {
             override fun onClickListener(song: Song, p: Int, isNow: Boolean) {
@@ -99,6 +102,12 @@ class PlaylistFragment : BaseFragment<FragmentPlaylistBinding>(FragmentPlaylistB
                     R.id.action_playlistFragment_to_playFragment,
                     bundle
                 )
+
+                user!!.userId?.let { song.songId?.let { it1 ->
+                    homeViewModel.latestListenTime(it,
+                        it1
+                    )
+                } }
             }
 
             override fun onClickEvent(song: Song) {

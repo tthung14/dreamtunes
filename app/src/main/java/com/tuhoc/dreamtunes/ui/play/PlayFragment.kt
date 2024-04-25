@@ -5,10 +5,6 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
-import android.graphics.Bitmap
-import android.graphics.Color
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.GradientDrawable
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.IBinder
@@ -17,7 +13,6 @@ import android.widget.SeekBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.palette.graphics.Palette
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.tuhoc.dreamtunes.R
@@ -49,22 +44,17 @@ class PlayFragment : BaseFragment<FragmentPlayBinding>(FragmentPlayBinding::infl
         var nowPlayingId: Int = 0
 
         fun setSongPosition(increment: Boolean): Int {
-//            if (isRandom) {
-//                // Nếu chế độ ngẫu nhiên được bật, chọn một vị trí ngẫu nhiên trong danh sách bài hát
-//                songPosition = (0 until musicListPA.size).random()
+//            if (increment) {
+//                if (musicListPA.size - 1 == songPosition)
+//                    songPosition = 0
+//                else ++songPosition
 //            } else {
-//                if (increment) {
-//                    if (musicListPA.size - 1 == songPosition)
-//                        songPosition = 0
-//                    else ++songPosition
-//                } else {
-//                    if (0 == songPosition)
-//                        songPosition = musicListPA.size - 1
-//                    else --songPosition
-//                }
+//                if (0 == songPosition)
+//                    songPosition = musicListPA.size - 1
+//                else --songPosition
 //            }
-//
 //            return musicListPA[songPosition].songId!!
+
             val previousSongPosition = songPosition // Lưu lại vị trí bài hát trước khi cập nhật
 
             if (isRandom) {
@@ -107,36 +97,6 @@ class PlayFragment : BaseFragment<FragmentPlayBinding>(FragmentPlayBinding::infl
         playViewModel = ViewModelProvider(this)[PlayViewModel::class.java]
 
         initializeLayout()
-
-        binding.imgVolume.setOnClickListener {
-            initVolume()
-        }
-
-        binding.btnBack.setOnClickListener {
-            isActive = false
-            requireActivity().onBackPressed()
-        }
-
-        binding.imgPausePlay.setOnClickListener {
-            if (isPlaying) {
-                pauseMusic()
-            } else {
-                playMusic()
-            }
-        }
-        binding.imgPrevious.setOnClickListener { prevNextSong(increment = false) }
-        binding.imgNext.setOnClickListener { prevNextSong(increment = true) }
-        binding.seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                if (fromUser) {
-                    musicService!!.mediaPlayer!!.seekTo(progress)
-                    musicService!!.showNotification(if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play)
-                }
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar?) = Unit
-            override fun onStopTrackingTouch(seekBar: SeekBar?) = Unit
-        })
     }
 
     override fun initView() {
@@ -172,9 +132,31 @@ class PlayFragment : BaseFragment<FragmentPlayBinding>(FragmentPlayBinding::infl
     }
 
     private fun onClick() {
+        binding.imgPausePlay.setOnClickListener {
+            if (isPlaying) {
+                pauseMusic()
+            } else {
+                playMusic()
+            }
+        }
+        binding.imgPrevious.setOnClickListener { prevNextSong(increment = false) }
+        binding.imgNext.setOnClickListener { prevNextSong(increment = true) }
+        binding.seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (fromUser) {
+                    musicService!!.mediaPlayer!!.seekTo(progress)
+                    musicService!!.showNotification(if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play)
+                }
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) = Unit
+            override fun onStopTrackingTouch(seekBar: SeekBar?) = Unit
+        })
+
         binding.imgFavorite.setOnClickListener {
             val user = LoginManager.getCurrentUser(requireContext())
             val song = arguments?.getParcelable<Song>(SONG)!!
+
             user!!.userId?.let {
                 song.songId?.let { it1 ->
                     playViewModel.isFavorite(it, it1) {
@@ -196,6 +178,15 @@ class PlayFragment : BaseFragment<FragmentPlayBinding>(FragmentPlayBinding::infl
                 isRandom = false
                 binding.imgRandom.setImageResource(R.drawable.ic_random)
             }
+        }
+
+        binding.btnBack.setOnClickListener {
+            isActive = false
+            requireActivity().onBackPressed()
+        }
+
+        binding.imgVolume.setOnClickListener {
+            initVolume()
         }
     }
 
@@ -229,7 +220,6 @@ class PlayFragment : BaseFragment<FragmentPlayBinding>(FragmentPlayBinding::infl
     }
 
     private fun setLayout() {
-        //fIndex = favouriteChecker(musicListPA[songPosition].id)
         Glide.with(requireActivity())
             .load(musicListPA[songPosition].image)
             .apply(RequestOptions().placeholder(R.drawable.music).centerCrop())
@@ -254,18 +244,6 @@ class PlayFragment : BaseFragment<FragmentPlayBinding>(FragmentPlayBinding::infl
         } else {
             binding.imgRandom.setImageResource(R.drawable.ic_random)
         }
-
-//        val drawable: BitmapDrawable = binding.imgAvatar.drawable as BitmapDrawable
-//        val bitmap: Bitmap = drawable.bitmap
-//        val bgColor = getColorsFromBitmap(bitmap)
-//        val gradient = GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, intArrayOf(0xFFFFFF, bgColor))
-//        binding.root.background = gradient
-//        requireActivity().window?.statusBarColor = bgColor
-    }
-
-    private fun getColorsFromBitmap(bitmap: Bitmap): Int {
-        val palette = Palette.from(bitmap).generate()
-        return palette.getDominantColor(Color.BLACK)
     }
 
     private fun createMediaPlayer() {
@@ -311,17 +289,6 @@ class PlayFragment : BaseFragment<FragmentPlayBinding>(FragmentPlayBinding::infl
             createMediaPlayer()
             sharedViewModel!!.setMessage(songId)
         }
-//        if (increment) {
-//            val songId = setSongPosition(increment = true)
-//            setLayout()
-//            createMediaPlayer()
-//            sharedViewModel!!.setMessage(songId)
-//        } else {
-//            val songId = setSongPosition(increment = false)
-//            setLayout()
-//            createMediaPlayer()
-//            sharedViewModel!!.setMessage(songId)
-//        }
     }
 
     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {

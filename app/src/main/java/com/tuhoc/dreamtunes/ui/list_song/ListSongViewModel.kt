@@ -5,8 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tuhoc.dreamtunes.data.pojo.Favorite
-import com.tuhoc.dreamtunes.data.pojo.Playlist
 import com.tuhoc.dreamtunes.data.pojo.PlaylistSong
 import com.tuhoc.dreamtunes.data.pojo.Song
 import com.tuhoc.dreamtunes.data.retrofit.RetrofitInstance

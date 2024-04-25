@@ -1,6 +1,7 @@
 package com.tuhoc.dreamtunes.ui.favorite
 
 import android.os.Bundle
+import android.util.Log
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
@@ -45,7 +46,6 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteB
         super.initData()
         songAdapter = SongAdapter()
         playlistAdapter = PlaylistAdapter()
-
     }
 
     override fun initView() {
@@ -63,7 +63,6 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteB
     private fun prepareRecyclerView() {
         binding.apply {
             rcvFavorite.adapter = songAdapter
-
             rcvPlaylist.adapter = playlistAdapter
             rcvPlaylist.layoutManager = GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
         }
@@ -110,6 +109,7 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteB
         val user = LoginManager.getCurrentUser(requireContext())
         user?.userId?.let { favoriteViewModel.getFavoriteSongs(it) }
         favoriteViewModel.songs.observe(viewLifecycleOwner) { songList ->
+            Log.d("TAG", "observeFavorite: " + songList.size)
             songAdapter.setSongList(songList.toMutableList())
         }
     }
@@ -122,16 +122,10 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteB
         }
     }
 
-    private fun date(): String {
-        val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
-        val currentDate = Date()
-        return dateFormat.format(currentDate)
-    }
-
     fun createPlaylist(playlistName: String) {
         val user = LoginManager.getCurrentUser(requireContext())
         user?.let {
-            favoriteViewModel.addPlaylist(playlistName, date(), it) { success ->
+            favoriteViewModel.addPlaylist(playlistName, Constants.date(), it) { success ->
                 if (success) {
                     observePlaylist()
                 }

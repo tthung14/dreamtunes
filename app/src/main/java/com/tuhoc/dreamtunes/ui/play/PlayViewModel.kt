@@ -3,8 +3,9 @@ package com.tuhoc.dreamtunes.ui.play
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tuhoc.dreamtunes.data.pojo.Favorite
+import com.tuhoc.dreamtunes.data.pojo.HistoryListenFavorite
 import com.tuhoc.dreamtunes.data.retrofit.RetrofitInstance
+import com.tuhoc.dreamtunes.utils.Constants
 import kotlinx.coroutines.launch
 
 class PlayViewModel: ViewModel() {
@@ -13,7 +14,7 @@ class PlayViewModel: ViewModel() {
     fun isFavoriteExits(userId: Int, songId: Int, onResult: (Boolean) -> Unit) {
         viewModelScope.launch {
             try {
-                val response = songApi.checkFavoriteExistence(userId, songId)
+                val response = songApi.checkFavoriteExists(userId, songId)
                 if (response.isSuccessful) {
                     response.body()?.let { onResult(it) }
                 } else {
@@ -28,30 +29,20 @@ class PlayViewModel: ViewModel() {
     fun isFavorite(userId: Int, songId: Int, onResult: (Boolean) -> Unit) {
         isFavoriteExits(userId, songId) {
             if (it) {
-                deleteFavoriteSong(userId, songId)
+                updateFavoriteSong(userId, songId, Constants.date(), false)
                 onResult(it)
             } else {
-                addFavoriteSong(userId, songId)
+                updateFavoriteSong(userId, songId, Constants.date(), true)
                 onResult(it)
             }
         }
     }
 
-    private fun addFavoriteSong(userId: Int, songId: Int) {
-        val favorite = Favorite(songId, userId)
+    private fun updateFavoriteSong(userId: Int, songId: Int, latestListenTime: String, isFavorite: Boolean) {
+        val favorite = HistoryListenFavorite(null, null, latestListenTime, isFavorite)
         viewModelScope.launch {
             try {
-                songApi.addFavoriteSong(favorite)
-            } catch (e: Exception) {
-                Log.e("TAG", "Error Exception: ${e.message}")
-            }
-        }
-    }
-
-    private fun deleteFavoriteSong(userId: Int, songId: Int) {
-        viewModelScope.launch {
-            try {
-                songApi.deleteFavoriteSong(userId, songId)
+                songApi.updateFavoriteSong(userId, songId, favorite)
             } catch (e: Exception) {
                 // Xử lý exception
                 Log.e("TAG", "Error Exception: ${e.message}")
