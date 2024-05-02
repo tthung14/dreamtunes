@@ -8,7 +8,6 @@ import android.content.ServiceConnection
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.IBinder
-import android.util.Log
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -44,17 +43,6 @@ class PlayFragment : BaseFragment<FragmentPlayBinding>(FragmentPlayBinding::infl
         var nowPlayingId: Int = 0
 
         fun setSongPosition(increment: Boolean): Int {
-//            if (increment) {
-//                if (musicListPA.size - 1 == songPosition)
-//                    songPosition = 0
-//                else ++songPosition
-//            } else {
-//                if (0 == songPosition)
-//                    songPosition = musicListPA.size - 1
-//                else --songPosition
-//            }
-//            return musicListPA[songPosition].songId!!
-
             val previousSongPosition = songPosition // Lưu lại vị trí bài hát trước khi cập nhật
 
             if (isRandom) {
@@ -97,32 +85,6 @@ class PlayFragment : BaseFragment<FragmentPlayBinding>(FragmentPlayBinding::infl
         playViewModel = ViewModelProvider(this)[PlayViewModel::class.java]
 
         initializeLayout()
-    }
-
-    override fun initView() {
-        super.initView()
-
-        requireActivity().runOnUiThread {
-            if (isPlaying) {
-                binding.imgAvatar.rotation = x++.toFloat()
-            } else {
-                binding.imgAvatar.rotation = 0F
-            }
-        }
-
-        val song = arguments?.getParcelable<Song>(SONG)!!
-        val user = LoginManager.getCurrentUser(requireContext())
-        user!!.userId?.let {
-            song.songId?.let { it1 ->
-                playViewModel.isFavoriteExits(it, it1) {
-                    if (it) {
-                        binding.imgFavorite.setBackgroundResource(R.drawable.ic_love_enable)
-                    } else {
-                        binding.imgFavorite.setBackgroundResource(R.drawable.ic_love)
-                    }
-                }
-            }
-        }
     }
 
     override fun handleEvent() {
@@ -220,6 +182,14 @@ class PlayFragment : BaseFragment<FragmentPlayBinding>(FragmentPlayBinding::infl
     }
 
     private fun setLayout() {
+        requireActivity().runOnUiThread {
+            if (isPlaying) {
+                binding.imgAvatar.rotation = x++.toFloat()
+            } else {
+                binding.imgAvatar.rotation = 0F
+            }
+        }
+
         Glide.with(requireActivity())
             .load(musicListPA[songPosition].image)
             .apply(RequestOptions().placeholder(R.drawable.music).centerCrop())

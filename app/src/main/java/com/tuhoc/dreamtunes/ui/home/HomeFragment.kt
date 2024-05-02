@@ -50,18 +50,17 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     override fun observerData() {
         super.observerData()
         homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
+
         observeSliders()
         observeTypes()
         observeSingers()
         observeRandomSongs()
 
         sharedViewModel = ViewModelProvider(requireActivity())[SharedViewModel::class.java]
-
         sharedViewModel.messageLiveData.observe(viewLifecycleOwner, Observer { songId ->
             currentSongId = songId
             songAdapter.updateSong()
         })
-
     }
 
     override fun handleEvent() {

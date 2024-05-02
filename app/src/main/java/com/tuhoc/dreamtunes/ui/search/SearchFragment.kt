@@ -28,18 +28,17 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
 
     override fun observerData() {
         super.observerData()
-        listSongViewModel = ViewModelProvider(this)[ListSongViewModel::class.java]
         homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
+        listSongViewModel = ViewModelProvider(this)[ListSongViewModel::class.java]
+
+        observeSongs()
+        observeSingers()
 
         sharedViewModel = ViewModelProvider(requireActivity())[SharedViewModel::class.java]
-
         sharedViewModel.messageLiveData.observe(viewLifecycleOwner, Observer { songId ->
             HomeFragment.currentSongId = songId
             searchAdapter.updateSong()
         })
-
-        observeSongs()
-        observeSingers()
     }
 
     override fun initData() {

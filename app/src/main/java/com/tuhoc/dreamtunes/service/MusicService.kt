@@ -96,7 +96,7 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
             .addAction(R.drawable.ic_next, "Next", nextPendingIntent)
             .build()
 
-        //seekbar nếu sài bật lên
+        // seekbar nếu sài bật lên
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
             val playbackSpeed = if(isPlaying) 1F else 0F
             mediaSession.setMetadata(MediaMetadataCompat.Builder()

@@ -3,14 +3,10 @@ package com.tuhoc.dreamtunes.ui.list_song
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.tuhoc.dreamtunes.R
 import com.tuhoc.dreamtunes.adapter.PlaylistSongAddAdapter
 import com.tuhoc.dreamtunes.bases.BaseFragment
@@ -22,8 +18,6 @@ import com.tuhoc.dreamtunes.ui.home.HomeFragment
 import com.tuhoc.dreamtunes.ui.home.HomeViewModel
 import com.tuhoc.dreamtunes.ui.play.SharedViewModel
 import com.tuhoc.dreamtunes.utils.Constants
-import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
-import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener
 
 class ListSongFragment : BaseFragment<FragmentListSongBinding>(FragmentListSongBinding::inflate) {
     private lateinit var homeViewModel: HomeViewModel
@@ -33,16 +27,16 @@ class ListSongFragment : BaseFragment<FragmentListSongBinding>(FragmentListSongB
 
     override fun observerData() {
         super.observerData()
-        listSongViewModel = ViewModelProvider(this)[ListSongViewModel::class.java]
         homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
+        listSongViewModel = ViewModelProvider(this)[ListSongViewModel::class.java]
+
+        observeSongs()
 
         sharedViewModel = ViewModelProvider(requireActivity())[SharedViewModel::class.java]
         sharedViewModel.messageLiveData.observe(viewLifecycleOwner, Observer { songId ->
             HomeFragment.currentSongId = songId
             playlistSongAddAdapter.updateSong()
         })
-
-        observeSongs()
     }
 
     override fun initData() {

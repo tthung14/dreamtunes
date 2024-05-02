@@ -41,8 +41,9 @@ class PlaylistFragment : BaseFragment<FragmentPlaylistBinding>(FragmentPlaylistB
 
     override fun observerData() {
         super.observerData()
-        playlistViewModel = ViewModelProvider(this)[PlaylistViewModel::class.java]
         homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
+        playlistViewModel = ViewModelProvider(this)[PlaylistViewModel::class.java]
+
         observeSongs()
 
         sharedViewModel = ViewModelProvider(requireActivity())[SharedViewModel::class.java]

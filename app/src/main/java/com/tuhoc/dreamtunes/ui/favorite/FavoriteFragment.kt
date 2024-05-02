@@ -109,7 +109,6 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteB
         val user = LoginManager.getCurrentUser(requireContext())
         user?.userId?.let { favoriteViewModel.getFavoriteSongs(it) }
         favoriteViewModel.songs.observe(viewLifecycleOwner) { songList ->
-            Log.d("TAG", "observeFavorite: " + songList.size)
             songAdapter.setSongList(songList.toMutableList())
         }
     }

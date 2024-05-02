@@ -1,21 +1,17 @@
 package com.tuhoc.dreamtunes.ui.artist
 
 import android.os.Bundle
-import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.bumptech.glide.Glide
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.tuhoc.dreamtunes.R
 import com.tuhoc.dreamtunes.adapter.AlbumAdapter
 import com.tuhoc.dreamtunes.adapter.SongAdapter
-import com.tuhoc.dreamtunes.adapter.TypeAdapter
 import com.tuhoc.dreamtunes.bases.BaseFragment
 import com.tuhoc.dreamtunes.data.pojo.Album
 import com.tuhoc.dreamtunes.data.pojo.Singer
 import com.tuhoc.dreamtunes.data.pojo.Song
-import com.tuhoc.dreamtunes.data.pojo.Type
 import com.tuhoc.dreamtunes.databinding.FragmentArtistBinding
 import com.tuhoc.dreamtunes.manager.LoginManager
 import com.tuhoc.dreamtunes.ui.home.HomeFragment
@@ -30,6 +26,7 @@ class ArtistFragment : BaseFragment<FragmentArtistBinding>(FragmentArtistBinding
     private lateinit var songAdapter: SongAdapter
     private lateinit var albumAdapter: AlbumAdapter
     private lateinit var sharedViewModel: SharedViewModel
+
     override fun initData() {
         super.initData()
         songAdapter = SongAdapter()
@@ -45,15 +42,14 @@ class ArtistFragment : BaseFragment<FragmentArtistBinding>(FragmentArtistBinding
         super.observerData()
         homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
         singerViewModel = ViewModelProvider(this)[SingerViewModel::class.java]
+
         observeSinger()
 
         sharedViewModel = ViewModelProvider(requireActivity())[SharedViewModel::class.java]
-
         sharedViewModel.messageLiveData.observe(viewLifecycleOwner, Observer { songId ->
             HomeFragment.currentSongId = songId
             songAdapter.updateSong()
         })
-
     }
 
     override fun handleEvent() {
@@ -86,7 +82,6 @@ class ArtistFragment : BaseFragment<FragmentArtistBinding>(FragmentArtistBinding
             albumAdapter.setAlbumList(albumList.toMutableList())
         }
 
-//        singer?.let { singerViewModel.getSongsBySinger(it.singerId) }
         singer?.singerId?.let { singerViewModel.getSongsBySinger(it) }
         singerViewModel.songs.observe(requireActivity()) { songList ->
             songAdapter.setSongList(songList.toMutableList())

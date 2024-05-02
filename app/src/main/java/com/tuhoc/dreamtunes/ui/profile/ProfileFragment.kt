@@ -2,14 +2,12 @@ package com.tuhoc.dreamtunes.ui.profile
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.bumptech.glide.Glide
 import com.tuhoc.dreamtunes.R
-import com.tuhoc.dreamtunes.adapter.PlaylistAdapter
 import com.tuhoc.dreamtunes.adapter.SongAdapter
 import com.tuhoc.dreamtunes.bases.BaseFragment
 import com.tuhoc.dreamtunes.data.pojo.Song

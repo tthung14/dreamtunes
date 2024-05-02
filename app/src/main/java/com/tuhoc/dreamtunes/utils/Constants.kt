@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit
 
 object Constants { // lưu trữ những gì liên quan đến key: baseurl, link...
     const val API_KEY = ""
-    const val BASE_URL = "http://192.168.16.109:8080/api/"
+    const val BASE_URL = "http://192.168.16.104:8080/api/"
     const val ALL_SONG_URL = "songs"
     const val ALL_TYPE_URL = "songs/type"
     const val ALL_USER_URL = "users"

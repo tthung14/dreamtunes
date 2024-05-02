@@ -1,25 +1,15 @@
 package com.tuhoc.dreamtunes.ui.songtype
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
-import androidx.navigation.fragment.findNavController
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.tuhoc.dreamtunes.R
-import com.tuhoc.dreamtunes.adapter.SingerAdapter
-import com.tuhoc.dreamtunes.adapter.SliderAdapter
 import com.tuhoc.dreamtunes.adapter.SongAdapter
-import com.tuhoc.dreamtunes.adapter.TypeAdapter
 import com.tuhoc.dreamtunes.bases.BaseFragment
 import com.tuhoc.dreamtunes.data.pojo.Album
 import com.tuhoc.dreamtunes.data.pojo.Song
 import com.tuhoc.dreamtunes.data.pojo.Type
-import com.tuhoc.dreamtunes.databinding.FragmentHomeBinding
 import com.tuhoc.dreamtunes.databinding.FragmentSongTypeBinding
 import com.tuhoc.dreamtunes.manager.LoginManager
 import com.tuhoc.dreamtunes.ui.home.HomeFragment
@@ -40,6 +30,7 @@ class SongTypeFragment : BaseFragment<FragmentSongTypeBinding>(FragmentSongTypeB
         super.observerData()
         homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
         songTypeViewModel = ViewModelProvider(this)[SongTypeViewModel::class.java]
+
         observeSongs()
 
         sharedViewModel = ViewModelProvider(requireActivity())[SharedViewModel::class.java]
