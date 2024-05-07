@@ -1,16 +1,14 @@
 package com.tuhoc.dreamtunes.ui.login
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import com.tuhoc.dreamtunes.MainActivity
+import com.tuhoc.dreamtunes.bases.BaseActivity
 import com.tuhoc.dreamtunes.databinding.ActivityLoginBinding
 import com.tuhoc.dreamtunes.manager.LoginManager.checkUserLoggedIn
 import com.tuhoc.dreamtunes.manager.LoginManager.setLoggedIn
-import com.tuhoc.dreamtunes.MainActivity
-import com.tuhoc.dreamtunes.bases.BaseActivity
 import com.tuhoc.dreamtunes.ui.signup.SignupActivity
 
 class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::inflate) {
@@ -91,7 +89,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
 
     private fun signUp() {
         startActivity(Intent(this@LoginActivity, SignupActivity::class.java))
-        finishAndRemoveTask()
+        finish()
     }
 
     private fun forgot() {

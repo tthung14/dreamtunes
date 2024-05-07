@@ -56,7 +56,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/_30sdp"
             android:fontFamily="@font/montserrat_bold"
-            android:text="Đăng xuất"
+            android:text="Đăng ký"
             android:textColor="@color/white"
             android:textSize="@dimen/_20ssp"
             android:textStyle="bold"
