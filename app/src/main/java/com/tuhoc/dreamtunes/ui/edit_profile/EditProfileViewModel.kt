@@ -19,7 +19,7 @@ class EditProfileViewModel: ViewModel() {
         imageRef.putFile(photoUri)
             .addOnSuccessListener {
                 imageRef.downloadUrl.addOnSuccessListener {
-                    val user = User(null, null, null, null, it.toString())
+                    val user = User(null, null, null, null, null, it.toString())
                     viewModelScope.launch {
                         try {
                             val response = songApi.updateUser(userId, user)
@@ -42,7 +42,7 @@ class EditProfileViewModel: ViewModel() {
     }
 
     fun editUserName(userId: Int, name: String, onResult: (String, Boolean) -> Unit) {
-        val user = User(null, name, null, null, null)
+        val user = User(null, name, null, null, null,null)
         viewModelScope.launch {
             try {
                 val response = songApi.updateUser(userId, user)
@@ -58,7 +58,7 @@ class EditProfileViewModel: ViewModel() {
     }
 
     fun editPassword(userId: Int, oldPass: String, newPass: String, onResult: (String, Boolean) -> Unit) {
-        val user = User(null, null, newPass, null, null)
+        val user = User(null, null, newPass, null, null, null)
         viewModelScope.launch {
             try {
                 val response = songApi.updateUser(userId, user)

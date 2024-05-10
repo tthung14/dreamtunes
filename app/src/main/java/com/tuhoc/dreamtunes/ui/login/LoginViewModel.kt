@@ -35,10 +35,15 @@ class LoginViewModel: ViewModel() {
             val foundUser = users.find { it.email == email }
 
             if (foundUser != null) {
-                if (foundUser.password == password) {
-                    onResult(true, "Login Successful", foundUser)
+                if (foundUser.role == "user") {
+                    Log.e("TAG", "logIn: "+ foundUser.role)
+                    if (foundUser.password == password) {
+                        onResult(true, "Login Successful", foundUser)
+                    } else {
+                        onResult(false, "Incorrect password", null)
+                    }
                 } else {
-                    onResult(false, "Incorrect password", null)
+                    onResult(false, "Login Failed", null)
                 }
             } else {
                 onResult(false, "User not found", null)

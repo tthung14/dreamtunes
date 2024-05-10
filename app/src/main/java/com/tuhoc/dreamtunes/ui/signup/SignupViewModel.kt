@@ -12,7 +12,7 @@ class SignupViewModel : ViewModel() {
     private val songApi = RetrofitInstance.getSongApi
 
     fun signUp(userName: String, email: String, password: String, onResult: (Boolean, String) -> Unit) {
-        val user = User(null, userName, email, password, null)
+        val user = User(null, userName, email, password, "user", null)
         viewModelScope.launch {
             try {
                 val response = songApi.addUser(user)
