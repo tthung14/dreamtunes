@@ -17,9 +17,9 @@ class SignupViewModel : ViewModel() {
             try {
                 val response = songApi.addUser(user)
                 if (response.isSuccessful) {
-                    onResult(true, "Signup Successful")
+                    onResult(true, "Đăng ký thành công")
                 } else {
-                    onResult(false, "Failed to signup")
+                    onResult(false, "Đăng ký thất bại")
                 }
             } catch (e: Exception) {
                 onResult(false, "Error occurred: ${e.message}")
@@ -34,12 +34,12 @@ class SignupViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     val emailExists = response.body() ?: false
                     if (emailExists) {
-                        onResult(false, "Email already exists")
+                        onResult(false, "Email đã tồn tại")
                     } else {
-                        onResult(true, "Email available for signup")
+                        onResult(true, "Email có sẵn để đăng ký")
                     }
                 } else {
-                    onResult(false, "Failed to check email existence")
+                    onResult(false, "Kiểm tra email thất bại")
                 }
             } catch (e: Exception) {
                 onResult(false, "Error occurred: ${e.message}")

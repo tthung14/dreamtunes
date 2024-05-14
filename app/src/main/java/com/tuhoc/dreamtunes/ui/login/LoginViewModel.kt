@@ -36,24 +36,40 @@ class LoginViewModel: ViewModel() {
 
             if (foundUser != null) {
                 if (foundUser.role == "user") {
-                    Log.e("TAG", "logIn: "+ foundUser.role)
                     if (foundUser.password == password) {
-                        onResult(true, "Login Successful", foundUser)
+                        onResult(true, "Đăng nhập thành công", foundUser)
                     } else {
-                        onResult(false, "Incorrect password", null)
+                        onResult(false, "Mật khẩu không đúng", null)
                     }
                 } else {
-                    onResult(false, "Login Failed", null)
+                    onResult(false, "Đăng nhập thất bại", null)
                 }
             } else {
-                onResult(false, "User not found", null)
+                onResult(false, "Người dùng không tồn tại", null)
             }
         } ?: run {
             onResult(false, "Error fetching user data", null)
         }
     }
 
-    fun forgetPassword(email: String, onResult: (Boolean, String) -> Unit) {
-
+    fun forgetPassword(email: String, onResult: (String) -> Unit) {
+        viewModelScope.launch {
+            try {
+                val chk = songApi.checkEmailExistence(email)
+                if (chk.isSuccessful) {
+                    val emailExists = chk.body() ?: false
+                    if (emailExists) {
+                        onResult("Vui lòng kiểm tra hộp thư email")
+                        songApi.sendEmail(email)
+                    } else {
+                        onResult("Email chưa được đăng ký")
+                    }
+                } else {
+                    onResult("Kiểm tra email thất bại")
+                }
+            } catch (e: Exception) {
+                Log.e("TAG", "Error Exception: ${e.message}")
+            }
+        }
     }
 }

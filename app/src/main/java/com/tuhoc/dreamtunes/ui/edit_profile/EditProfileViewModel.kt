@@ -24,9 +24,9 @@ class EditProfileViewModel: ViewModel() {
                         try {
                             val response = songApi.updateUser(userId, user)
                             if (response.isSuccessful) {
-                                onResult("Update Successful", true)
+                                onResult("Chỉnh sửa thành công", true)
                             } else {
-                                onResult("Update failure", false)
+                                onResult("Chỉnh sửa thất bại", false)
                             }
                         } catch (e: Exception) {
                             onResult("Error occurred: ${e.message}", false)
@@ -47,9 +47,9 @@ class EditProfileViewModel: ViewModel() {
             try {
                 val response = songApi.updateUser(userId, user)
                 if (response.isSuccessful) {
-                    onResult("Update Successful", true)
+                    onResult("Chỉnh sửa thành công", true)
                 } else {
-                    onResult("Update failure", false)
+                    onResult("Chỉnh sửa thất bại", false)
                 }
             } catch (e: Exception) {
                 onResult("Error occurred: ${e.message}", false)
@@ -63,9 +63,9 @@ class EditProfileViewModel: ViewModel() {
             try {
                 val response = songApi.updateUser(userId, user)
                 if (response.isSuccessful) {
-                    onResult("Update Successful", true)
+                    onResult("Chỉnh sửa thành công", true)
                 } else {
-                    onResult("Update failure", false)
+                    onResult("Chỉnh sửa thất bại", false)
                 }
             } catch (e: Exception) {
                 onResult("Error occurred: ${e.message}", false)

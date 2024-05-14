@@ -96,17 +96,17 @@ class EditProfileActivity : BaseActivity<ActivityEditProfileBinding>(ActivityEdi
         val confirm = binding.edtConfirm.text.toString()
 
         if (newPass.length < 6 || oldPass.length < 6) {
-            Toast.makeText(this, "Please enter the correct format", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Vui lòng nhập đúng định dạng", Toast.LENGTH_SHORT).show()
             return false
         }
 
         if (newPass != confirm) {
-            Toast.makeText(this, "Reconfirm", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Xác nhận lại", Toast.LENGTH_SHORT).show()
             return false
         }
 
         if (newPass == oldPass) {
-            Toast.makeText(this, "Matched the old password", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Trùng với mật khẩu cũ", Toast.LENGTH_SHORT).show()
             return false
         }
         return true

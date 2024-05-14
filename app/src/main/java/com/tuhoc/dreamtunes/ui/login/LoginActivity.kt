@@ -79,11 +79,15 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
                         Toast.makeText(this@LoginActivity, message, Toast.LENGTH_SHORT).show()
                     }
                 } else {
-                    Toast.makeText(this@LoginActivity, "Please enter the correct format", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@LoginActivity,
+                        "Vui lòng nhập đúng định dạng",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         } else {
-            Toast.makeText(this@LoginActivity, "All fields are mandatory", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@LoginActivity, "Không được để trống", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -97,21 +101,15 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
         val regEmail = ".*@gmail\\.com$".toRegex()
 
         if (email.isNotEmpty()) {
-            binding.progressBar.visibility = View.VISIBLE
-            loginViewModel.forgetPassword(email) { success, message ->
-                binding.progressBar.visibility = View.GONE
-                if (regEmail.matches(email)) {
-                    if (success) {
-                        Toast.makeText(this@LoginActivity, message, Toast.LENGTH_SHORT).show()
-                    } else {
-                        Toast.makeText(this@LoginActivity, message, Toast.LENGTH_SHORT).show()
-                    }
-                } else {
-                    Toast.makeText(this@LoginActivity, "Please enter the correct format", Toast.LENGTH_SHORT).show()
+            if (regEmail.matches(email)) {
+                loginViewModel.forgetPassword(email) { message ->
+                    Toast.makeText(this@LoginActivity, message, Toast.LENGTH_SHORT).show()
                 }
+            } else {
+                Toast.makeText(this@LoginActivity,"Vui lòng nhập đúng định dạng", Toast.LENGTH_SHORT).show()
             }
         } else {
-            Toast.makeText(this@LoginActivity, "All fields are mandatory", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@LoginActivity, "Vui lòng nhập email", Toast.LENGTH_SHORT).show()
         }
     }
 }

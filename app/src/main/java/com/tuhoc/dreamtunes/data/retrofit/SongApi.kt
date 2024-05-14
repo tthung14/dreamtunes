@@ -86,10 +86,16 @@ interface SongApi {
 
     @GET("${Constants.CHECK_HISTORY_LISTEN}{userId}/{songId}")
     suspend fun checkExists(@Path("userId") userId: Int, @Path("songId") songId: Int): Response<Boolean>
+
     @POST(Constants.INSERT_HISTORY_LISTEN_URL)
     suspend fun addHistoryListen(@Body historyListenFavorite: HistoryListenFavorite): Response<HistoryListenFavorite>
+
     @PUT("${Constants.UPDATE_HISTORY_LISTEN_URL}{userId}/{songId}")
     suspend fun updateHistoryListen(@Path("userId") userId: Int, @Path("songId") songId: Int, @Body historyListenFavorite: HistoryListenFavorite): Response<HistoryListenFavorite>
+
     @GET("${Constants.ALL_HISTORY_LISTEN_URL}{userId}")
     suspend fun getHistoryListen(@Path("userId") userId: Int): Response<List<Song>>
+
+    @POST(Constants.SEND_EMAIL)
+    suspend fun sendEmail(@Query("email") email: String): Response<String>
 }

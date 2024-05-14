@@ -66,7 +66,7 @@ class SignupActivity : BaseActivity<ActivitySignupBinding>(ActivitySignupBinding
                                     Toast.makeText(this@SignupActivity, message, Toast.LENGTH_SHORT).show()
                                 }
                             } else {
-                                Toast.makeText(this@SignupActivity, "Please enter the correct format", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this@SignupActivity, "Vui lòng nhập đúng định dạng", Toast.LENGTH_SHORT).show()
                             }
                         }
                     } else {
@@ -75,10 +75,10 @@ class SignupActivity : BaseActivity<ActivitySignupBinding>(ActivitySignupBinding
                     }
                 }
             } else {
-                Toast.makeText(this@SignupActivity, "Reconfirm", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@SignupActivity, "Xác nhận lại", Toast.LENGTH_SHORT).show()
             }
         } else {
-            Toast.makeText(this@SignupActivity, "All fields are mandatory", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@SignupActivity, "Không được để trống", Toast.LENGTH_SHORT).show()
         }
     }
 
