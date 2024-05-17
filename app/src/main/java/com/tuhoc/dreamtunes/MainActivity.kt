@@ -2,6 +2,7 @@ package com.tuhoc.dreamtunes
 
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Bundle
 import android.view.View
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -58,20 +59,16 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
             false
         }
 
-
         showPhotoPermission()
-
     }
 
     private fun showPhotoPermission() {
-
         val p3 = ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS)
 
         if (p3 != PackageManager.PERMISSION_GRANTED) {
             requestPhotoPermission()
         }
     }
-
 
     private fun requestPhotoPermission() {
         ActivityCompat.requestPermissions(

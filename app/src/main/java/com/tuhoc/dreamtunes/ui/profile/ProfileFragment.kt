@@ -13,6 +13,7 @@ import com.tuhoc.dreamtunes.bases.BaseFragment
 import com.tuhoc.dreamtunes.data.pojo.Song
 import com.tuhoc.dreamtunes.databinding.FragmentProfileBinding
 import com.tuhoc.dreamtunes.manager.LoginManager
+import com.tuhoc.dreamtunes.service.MusicService
 import com.tuhoc.dreamtunes.ui.edit_profile.EditProfileActivity
 import com.tuhoc.dreamtunes.ui.home.HomeFragment
 import com.tuhoc.dreamtunes.ui.home.HomeViewModel
@@ -134,5 +135,10 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
         binding.imgSelf.setOnClickListener {
             startActivity(Intent(requireContext(), EditProfileActivity::class.java))
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        requireActivity().stopService(Intent(requireContext(), MusicService::class.java))
     }
 }

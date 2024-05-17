@@ -14,6 +14,7 @@ import android.os.Looper
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
+import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.tuhoc.dreamtunes.MainActivity
 import com.tuhoc.dreamtunes.R
@@ -23,6 +24,7 @@ import com.tuhoc.dreamtunes.ui.play.PlayFragment
 import com.tuhoc.dreamtunes.ui.play.PlayFragment.Companion.isPlaying
 import com.tuhoc.dreamtunes.utils.ApplicationClass
 import com.tuhoc.dreamtunes.utils.Constants
+import kotlinx.coroutines.Runnable
 
 
 class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
@@ -31,6 +33,8 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
     private lateinit var mediaSession: MediaSessionCompat
     private lateinit var runnable: Runnable
     lateinit var audioManager: AudioManager
+
+    private var handler: Handler = Handler(Looper.getMainLooper())
 
     override fun onBind(intent: Intent?): IBinder {
         mediaSession = MediaSessionCompat(baseContext, "Music")
@@ -42,7 +46,6 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
             return this@MusicService
         }
     }
-
 
     fun showNotification(playPauseBtn: Int) {
         val intent = Intent(baseContext, MainActivity::class.java)
@@ -91,6 +94,7 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setOnlyAlertOnce(true)
+            .setSilent(true)
             .addAction(R.drawable.ic_previous, "Previous", prevPendingIntent)
             .addAction(playPauseBtn, "Play", playPendingIntent)
             .addAction(R.drawable.ic_next, "Next", nextPendingIntent)
@@ -117,7 +121,7 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
                         isPlaying = false
                         mediaPlayer!!.pause()
                         showNotification(R.drawable.ic_play)
-                    }else{
+                    } else{
                         //play music
                         PlayFragment.bindingD.imgPausePlay.setImageResource(R.drawable.ic_pause)
                         isPlaying = true
@@ -135,14 +139,12 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
                         .setActions(PlaybackStateCompat.ACTION_SEEK_TO)
                         .build()
                     mediaSession.setPlaybackState(playBackStateNew)
-
                 }
             })
         }
 
         startForeground(13, notification)
     }
-
 
     fun createMediaPlayer() {
         try {
@@ -172,8 +174,10 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
                 Constants.formatDuration(mediaPlayer!!.currentPosition.toLong())
             PlayFragment.bindingD.seekBar.progress = mediaPlayer!!.currentPosition
             Handler(Looper.getMainLooper()).postDelayed(runnable, 200)
+//            handler.postDelayed(runnable, 200)
         }
         Handler(Looper.getMainLooper()).postDelayed(runnable, 0)
+//        handler.postDelayed(runnable, 0)
     }
 
     override fun onAudioFocusChange(focusChange: Int) {
@@ -184,17 +188,18 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
             isPlaying = false
             mediaPlayer!!.pause()
             showNotification(R.drawable.ic_play)
-
         }
     }
 
-    //for making persistent
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         return START_STICKY
     }
 
     override fun onDestroy() {
         super.onDestroy()
+//        if (::runnable.isInitialized) {
+//            handler.removeCallbacks(runnable)
+//        }
         mediaPlayer?.release() // Dừng MediaPlayer
         stopForeground(true) // Gỡ bỏ notification và dừng foreground service
     }
