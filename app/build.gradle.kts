@@ -84,7 +84,7 @@ dependencies {
     implementation("de.hdodenhof:circleimageview:3.1.0")
 
     // slide
-    implementation("com.github.smarteist:autoimageslider:1.4.0")
+    implementation("com.github.koai-dev:Android-Image-Slider:1.4.0")
 
     // firebase
     implementation(platform("com.google.firebase:firebase-bom:32.7.4"))
